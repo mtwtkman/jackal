@@ -1,0 +1,11 @@
+cradle:
+  cabal:
+    components:
+      - path: "./jackal-slack"
+        component: "lib:jackal-slack"
+      - path: "./jackal-core"
+        component: "lib:jackal-core"
+      - path: "./app"
+        component: "exe:jackal"
+      - path: "./test"
+        component: "test:tests"

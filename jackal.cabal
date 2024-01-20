@@ -1,0 +1,53 @@
+cabal-version: 3.0
+name:          jackal
+version:       0.1.0.0
+license:
+author:        inb-miniique
+maintainer:    143318868+inb-miniique@users.noreply.github.com
+build-type:    Simple
+
+common basic
+  ghc-options:      -Wall
+  default-language: Haskell2010
+
+library jackal-slack
+  hs-source-dirs:  jackal-slack
+  build-depends:
+    , aeson
+    , base
+    , req
+
+  exposed-modules:
+    Jackal.Slack
+    Jackal.Slack.Endpoint.Conversations.History
+
+library jackal-core
+  import:          basic
+  hs-source-dirs:  jackal-core
+  build-depends:
+    , base
+    , bytestring
+    , jackal-slack
+    , text
+
+  exposed-modules:
+    Jackal
+    Jackal.Env
+
+executable jackal
+  import:         basic
+  main-is:        Main.hs
+  build-depends:  base
+  hs-source-dirs: app
+
+test-suite tests
+  import:         basic
+  type:           exitcode-stdio-1.0
+  main-is:        tests.hs
+  hs-source-dirs: test
+  build-depends:
+    , base
+    , jackal-core
+    , QuickCheck
+    , tasty
+    , tasty-quickcheck

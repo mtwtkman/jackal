@@ -1,0 +1,1 @@
+module Jackal.Slack where
