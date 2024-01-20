@@ -1,6 +1,6 @@
 module Jackal.Test.FreeTest (tests) where
 
-import Jackal.Free (Free (Roll), FreeT (..), liftF)
+import Jackal.Free (Free (Roll), liftFree)
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.QuickCheck (Property, testProperty)
 
@@ -17,25 +17,18 @@ prop_Free =
     "Free monad"
     []
 
-data TeletypeF a
-  = PrintLine !String !a
-  | GetLine !(String -> a)
+newtype Context a = Context {runContext :: a}
 
--- instance Functor TeletypeF where
---   fmap f (PrintLine v a) = PrintLine v (f a)
---   fmap f (GetLine g) = GetLine (f . g)
+instance Functor Context where
+  fmap f (Context a) = Context (f a)
 
--- instance Applicative TeletypeF where
---
---
--- echo :: Free TeletypeF ()
--- echo = do
---   l <- getLine'
---   printLine l
---
---
--- getLine' :: Free TeletypeF String
--- getLine' = liftF (GetLine id)
---
--- printLine :: String -> Free TeletypeF ()
--- printLine l = liftF (PrintLine l ())
+instance Applicative Context where
+  pure = Context
+  (Context f) <*> (Context a) = Context (f a)
+
+getContext :: String -> Free Context String
+getContext = liftFree . Context
+
+readContext :: Free Context ()
+readContext = do
+  runFr
