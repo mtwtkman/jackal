@@ -1,6 +1,6 @@
 module Main where
 
-import qualified Jackal.Test.TypeTest as TypeTest
+import qualified Jackal.Test.FreeTest as FreeTest
 import Test.Tasty
 
 main :: IO ()
@@ -10,5 +10,5 @@ tests :: TestTree
 tests =
   testGroup
     "Jackal test"
-    [ TypeTest.tests
+    [ FreeTest.tests
     ]

@@ -32,6 +32,8 @@ library jackal-core
 
   exposed-modules:
     Jackal
+    Jackal.Free
+    Jackal.Type
     Jackal.Env
 
 executable jackal

@@ -1,6 +1,6 @@
-module Jackal.Test.TypeTest (tests) where
+module Jackal.Test.FreeTest (tests) where
 
-import Jackal.Type (Free (Roll), FreeT (..), liftF)
+import Jackal.Free (Free (Roll), FreeT (..), liftF)
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.QuickCheck (Property, testProperty)
 
