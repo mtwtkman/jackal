@@ -26,3 +26,8 @@ instance (Functor f, Applicative f) => Monad (Free f) where
   return = pure
   Return a >>= f = f a
   Roll ffa >>= f = Roll $ fmap (>>= f) ffa
+
+liftF :: (Functor f) => f a -> Free f a
+liftF fa = Roll (fmap Return fa)
+
+newtype FreeT m a = FreeT { runFreeT :: Free m a -> m a }
