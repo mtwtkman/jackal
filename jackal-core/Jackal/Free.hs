@@ -21,7 +21,6 @@ instance (Functor f, Applicative f) => Monad (Free f) where
 liftFree :: (Functor f, Applicative f) => f a -> Free f a
 liftFree fa = Roll (fmap Return fa)
 
-runFree :: (Functor f, Applicative f) => Free f a -> f a
-runFree (Return a) = pure a
--- TODO
-runFree (Roll ffa) = undefined
+runFree :: (Monad f) => Free f a -> f a
+runFree (Return a) = return a
+runFree (Roll ffa) = ffa >>= runFree
