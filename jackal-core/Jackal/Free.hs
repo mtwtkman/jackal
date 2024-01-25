@@ -16,11 +16,26 @@ instance (Applicative f) => Applicative (Free f) where
 instance (Functor f, Applicative f) => Monad (Free f) where
   return = pure
   Return a >>= f = f a
-  Roll ffa >>= f = Roll $ fmap (>>= f) ffa
+  Roll ff >>= f = Roll ((>>= f) <$> ff)
 
-liftFree :: (Functor f, Applicative f) => f a -> Free f a
+liftFree :: (Functor f) => f a -> Free f a
 liftFree fa = Roll (fmap Return fa)
 
-runFree :: (Monad f) => Free f a -> f a
+foldFree :: (Functor f) => (f a -> a) -> Free f a -> a
+foldFree _ (Return a) = a
+foldFree f (Roll ff) = f (fmap (foldFree f) ff)
+
+runFree :: (Monad m) => Free m a -> m a
 runFree (Return a) = return a
-runFree (Roll ffa) = ffa >>= runFree
+runFree (Roll ff) = ff >>= runFree
+
+newtype ReaderF r f a = ReaderF {runReaderF :: r -> f a}
+
+instance (Functor f) => Functor (ReaderF r f) where
+  fmap f (ReaderF rf) = ReaderF $ \r -> fmap f (rf r)
+
+instance (Applicative f) => Applicative (ReaderF r f) where
+  pure a = ReaderF $ const (pure a)
+  ReaderF f <*> ReaderF run = ReaderF $ \r -> f r <*> run r
+
+type Reader r f = Free (ReaderF r f)
